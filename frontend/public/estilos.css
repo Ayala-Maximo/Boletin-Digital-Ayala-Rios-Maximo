@@ -1,0 +1,206 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+  }
+  
+  .caja-general {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  }
+  
+  .logo {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+  }
+  
+  .png {
+    max-width: 100%;
+    height: auto;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+  }
+
+  .menu th,
+  .menu td {
+    padding: 15px;
+    align-self: center;     
+  }
+
+  .user{
+    max-width: 100%;
+    height: auto;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .cuerpo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  
+  .caja-notas {
+    width: 100%;
+    max-width: 900px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tabla-notas {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    text-align: center;
+  }
+  
+  .tabla-notas th,
+  .tabla-notas td {
+    border: 1px solid #999;
+    padding: 10px;
+  }
+  
+  .tabla-notas thead {
+    background-color: #ddd;
+    font-weight: bold;
+  }
+  
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .pie {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+  }
+  
+  #icono {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+  }
+
+  /* Contenedor principal centrado */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  /* Caja del formulario */
+  .form-box {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Títulos del formulario */
+  .form-box h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  /* Etiquetas e inputs */
+  .form-box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-box input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  /* Registro y login css */
+  .form-box button {
+    width: 100%;
+    padding: 10px;
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-box button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Link de registro */
+  .register-link {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .register-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Grupo de botones */
+  .button-group {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .pie {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .tabla-notas {
+      font-size: 14px;
+    }
+  
+    #icono {
+      width: 35px;
+      height: 35px;
+    }
+}
+  
