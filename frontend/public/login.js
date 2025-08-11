@@ -5,7 +5,7 @@ document.getElementById('log').addEventListener('submit', async (e) => {
     const password = document.getElementById('log-password').value;
     
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -13,12 +13,12 @@ document.getElementById('log').addEventListener('submit', async (e) => {
         body: JSON.stringify({ email, password }),
         credentials: 'include' 
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
         throw new Error(data.error || 'Error en la autenticación');
       }
-
-      const data = await response.json();
 
       console.log('¡Login exitoso!');
       
@@ -27,8 +27,7 @@ document.getElementById('log').addEventListener('submit', async (e) => {
     } else {
       alert('Error de login');
     }
-      
-      
+            
     } catch (error) {
       console.error('Error:', error);
       alert(error.message);

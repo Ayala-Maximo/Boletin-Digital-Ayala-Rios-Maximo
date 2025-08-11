@@ -1,11 +1,11 @@
 {
-  "name": "nueva-carpeta",
+  "name": "boletin",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "backend/server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
+    "dev": "nodemon backend/server.js",
+    "start": "node backend/server.js",
     "reset-deps": "rm -rf node_modules package-lock.json && npm install"
   },
   "dependencies": {

@@ -1,0 +1,11 @@
+import { registro,login,logout } from "../controllers/auth.controller.js";
+import { verificarToken } from "../middlewer/auth.middleware.js";
+import express from 'express';
+const router = express.Router();
+
+router.post('/register', registro);
+router.post('/login', login);
+router.post('/logout', logout);
+router.post('/verificador', verificarToken);
+
+export default router;

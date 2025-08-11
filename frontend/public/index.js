@@ -5,7 +5,7 @@ fetch('/api/verificador', {
 document.getElementById('logo').addEventListener('click', async function() {
   try {
     // Llamar al endpoint de logout
-    const response = await fetch('/api/logout', {
+    const response = await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include' // Necesario para cookies
     });
