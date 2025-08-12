@@ -3,109 +3,127 @@ body {
     margin: 0;
     padding: 0;
     background-color: #fafafa;
-  }
+}
   
-  .caja-general {
+.caja-general {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-  }
+}
   
-  header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #333;
     color: white;
     padding: 10px;
-  }
+}
   
-  .logo {
+.logo {
     width: 60px;
     height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;    
-  }
+}
   
-  .png {
+.png {
     max-width: 100%;
     height: auto;
     padding: 10px;
     border-radius: 5px;
     background-color: #f4f4f4;
-  }
+}
 
-  .menu th,
-  .menu td {
+.menu th,
+.menu td {
     padding: 15px;
     align-self: center;     
-  }
+}
 
-  .user{
+.user {
     max-width: 100%;
     height: auto;
     padding: 10px;
     border-radius: 5px;
-  }
+}
   
-  .cuerpo {
+.cuerpo {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
-  }
+}
   
-  .caja-notas {
+.caja-notas {
     width: 100%;
     max-width: 900px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
+}
   
-  .tabla-notas {
+.tabla-notas {
     width: 100%;
     border-collapse: collapse;
     background-color: white;
     text-align: center;
-  }
+}
   
-  .tabla-notas th,
-  .tabla-notas td {
+.tabla-notas th,
+.tabla-notas td {
     border: 1px solid #999;
     padding: 10px;
-  }
+}
   
-  .tabla-notas thead {
+.tabla-notas thead {
     background-color: #ddd;
     font-weight: bold;
-  }
+}
+
+/* NUEVO: tabla encabezado centrada y separada */
+.tabla-encabezado {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.tabla-encabezado th {
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #f5f5f5;
+}
+
+.tabla-encabezado th:first-child {
+    padding-right: 40px;
+}
   
-  footer {
+footer {
     background-color: #333;
     color: white;
     text-align: center;
     padding: 20px 0;
-  }
+}
   
-  .pie {
+.pie {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
     flex-wrap: wrap;
     padding-bottom: 10px;
-  }
+}
   
-  #icono {
+#icono {
     width: 50px;
     height: 50px;
     margin: 5px;
-  }
+}
 
-  /* Contenedor principal centrado */
+/* Contenedor principal centrado */
 .container {
     display: flex;
     justify-content: center;
@@ -113,44 +131,44 @@ body {
     min-height: 90vh;
     background-color: #f4f4f4;
     padding: 20px;
-  }
+}
   
-  /* Caja del formulario */
-  .form-box {
+/* Caja del formulario */
+.form-box {
     background-color: white;
     padding: 30px 40px;
     border-radius: 8px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
-  }
+}
   
-  /* Títulos del formulario */
-  .form-box h2 {
+/* Títulos del formulario */
+.form-box h2 {
     text-align: center;
     color: #2c3e50;
     margin-bottom: 20px;
-  }
+}
   
-  /* Etiquetas e inputs */
-  .form-box label {
+/* Etiquetas e inputs */
+.form-box label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
     color: #333;
-  }
+}
   
-  .form-box input {
+.form-box input {
     width: 100%;
     padding: 8px 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-  }
+}
   
-  /* Registro y login css */
-  .form-box button {
+/* Registro y login css */
+.form-box button {
     width: 100%;
     padding: 10px;
     background-color: #3498db;
@@ -160,99 +178,98 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-  }
+}
   
-  .form-box button:hover {
+.form-box button:hover {
     background-color: #2980b9;
-  }
+}
   
-  /* Link de registro */
-  .register-link {
+/* Link de registro */
+.register-link {
     text-align: center;
     margin-top: 10px;
-  }
+}
   
-  .register-link a {
+.register-link a {
     color: #3498db;
     text-decoration: none;
     font-weight: bold;
-  }
+}
   
-  .register-link a:hover {
+.register-link a:hover {
     text-decoration: underline;
-  }
+}
   
-  /* Grupo de botones */
-  .button-group {
+/* Grupo de botones */
+.button-group {
     text-align: center;
     margin-top: 10px;
-  }
+}
   
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .pie {
-      flex-direction: column;
-      text-align: center;
+        flex-direction: column;
+        text-align: center;
     }
   
     .tabla-notas {
-      font-size: 14px;
+        font-size: 14px;
     }
   
     #icono {
-      width: 35px;
-      height: 35px;
+        width: 35px;
+        height: 35px;
     }
 }
   
-
 /* Menú desplegable de usuario */
 .usuario-menu {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .icono-usuario {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid #fff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
 }
 
 .menu-desplegable {
-  display: none;
-  position: absolute;
-  right: 0;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  border-radius: 4px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  min-width: 200px;
-  z-index: 100;
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border-radius: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-width: 200px;
+    z-index: 100;
 }
 
 .menu-desplegable li {
-  border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eee;
 }
 
 .menu-desplegable li:last-child {
-  border-bottom: none;
+    border-bottom: none;
 }
 
 .menu-desplegable li a,
 .menu-desplegable li strong {
-  display: block;
-  padding: 10px 15px;
-  text-decoration: none;
-  color: #333;
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
 }
 
 .menu-desplegable li a:hover {
-  background: #f5f5f5;
+    background: #f5f5f5;
 }
 
 .usuario-menu:hover .menu-desplegable {
-  display: block;
+    display: block;
 }
