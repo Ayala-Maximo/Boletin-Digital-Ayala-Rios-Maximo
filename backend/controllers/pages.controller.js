@@ -19,7 +19,7 @@ export const getIndex = (req, res) => {
 
 export const getAdmins = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  res.sendFile(frontendPath+'/protec/admin/dashboard.html');
+  res.sendFile(frontendPath+'/protec/admin/indexAdmin.html');
 };
 
 export const getAlumnos = (req, res) => {
@@ -35,4 +35,9 @@ export const getTutores = (req, res) => {
 export const getProfes = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.sendFile(frontendPath+'/protec/tutores/tutores.html');
+};
+
+export const getdash = (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(frontendPath+'/protec/admin/dashboard.html');
 };

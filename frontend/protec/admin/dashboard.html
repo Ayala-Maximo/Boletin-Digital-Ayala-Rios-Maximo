@@ -1,12 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración</title>
+  <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <h1>admin</h1>
-    <img src="imagenes/facebook.png" alt="fggf">
+<div class="caja-general">
+
+  <!-- Encabezado -->
+  <header>
+    <div class="logo">
+      <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
+    </div>
+    <div class="menu">
+      <h2>Panel de Administración</h2>
+    </div>
+    <div class="usuario-menu">
+      <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
+      <ul class="menu-desplegable">
+        <li><strong>Administrador</strong></li>
+        <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Cuerpo -->
+  <main class="cuerpo">
+    <section class="caja-notas">
+
+      <!-- Tabs -->
+      <div class="button-group">
+        <button onclick="mostrarSeccion('usuarios')">Usuarios</button>
+        <button onclick="mostrarSeccion('notas')">Notas</button>
+        <button onclick="mostrarSeccion('privilegios')">Privilegios</button>
+      </div>
+
+      <!-- Sección usuarios -->
+      <div id="usuarios" class="seccion">
+        <h3>Gestión de Usuarios</h3>
+        <table class="tabla-notas" id="tablaUsuarios">
+          <thead>
+            <tr>
+              <th>ID</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Rol</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Sección notas -->
+      <div id="notas" class="seccion" style="display:none;">
+        <h3>Gestión de Notas</h3>
+        <table class="tabla-notas" id="tablaNotas">
+          <thead>
+            <tr>
+              <th>ID</th><th>Alumno</th><th>Materia</th><th>Nota</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Sección privilegios -->
+      <div id="privilegios" class="seccion" style="display:none;">
+        <h3>Gestión de Privilegios</h3>
+        <table class="tabla-notas" id="tablaPrivilegios">
+          <thead>
+            <tr>
+              <th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- Pie -->
+  <footer>
+    <p>&copy; 2024 Dr. Ernesto Guevarra</p>
+  </footer>
+</div>
+
+<script src="dashboard.js"></script>
 </body>
 </html>

@@ -10,6 +10,29 @@ import mysql from 'mysql2/promise';
 
 dotenv.config()
 
+function getRedirectUrlByRole(privilegioId) {
+    switch (privilegioId) {
+        case 1: return '/admin';
+        case 2: return '/profes';
+        case 3: return '/tutores';
+        case 4: return '/alumnos';
+        default: return '/index.html';
+    }
+}
+
+export async function checkSession(req, res) {
+    try {
+        const redirectUrl = getRedirectUrlByRole(req.privilegioId);
+        res.json({
+            loggedIn: true,
+            privilegioId: req.privilegioId,
+            redirectUrl
+        });
+    } catch (error) {
+        res.status(401).json({ loggedIn: false });
+    }
+}
+
 // Lógica de registro
 
 
@@ -96,17 +119,27 @@ export async function login(req, res)  {
 
         res.cookie('jwt', token, getCookieConfig(req));
 
+        let redirectUrl;
+        switch (user.privilegio_id) {
+            case 1: redirectUrl = '/admin'; break;
+            case 2: redirectUrl = '/profes'; break;
+            case 3: redirectUrl = '/tutores'; break;
+            case 4: redirectUrl = '/alumnos'; break;
+            default: redirectUrl = '/index.html';
+        }
+
         // Respuesta mejorada con más datos del usuario
         res.json({ 
             success: true,
             message: 'Login exitoso',
+            redirectUrl,
             user: {
                 id: user.id,
                 nombre: user.nombre,
                 apellido: user.apellido,
                 email: user.email,
-                rol: user.privilegio_id 
-            },
+                rol: user.privilegio_id
+            }
         });
 
     } catch (error) {

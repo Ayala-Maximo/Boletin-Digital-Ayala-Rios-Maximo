@@ -1,3 +1,21 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('/api/auth/check-session', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
+        const data = await res.json();
+
+        if (data.loggedIn) {
+            window.location.href = data.redirectUrl;
+            return; // Evita que se muestre el formulario
+        }
+    } catch (err) {
+        console.log("No hay sesión activa.");
+    }
+});
+
 document.getElementById('log').addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -22,11 +40,11 @@ document.getElementById('log').addEventListener('submit', async (e) => {
 
       console.log('¡Login exitoso!');
       
-    if (data.success) {
-      window.location.href = '/index.html';
-    } else {
-      alert('Error de login');
-    }
+        if (data.success) {
+            window.location.href = data.redirectUrl;
+        } else {
+            alert('Error de login');
+        }
             
     } catch (error) {
       console.error('Error:', error);
