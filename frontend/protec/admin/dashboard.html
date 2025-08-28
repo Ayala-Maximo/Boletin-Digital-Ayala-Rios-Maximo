@@ -5,11 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Administración</title>
   <link rel="stylesheet" href="estilos.css">
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    .modal-content h3 {
+      margin-top: 0;
+    }
+    .modal-content label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    .modal-content button {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 <div class="caja-general">
-
-  <!-- Encabezado -->
   <header>
     <div class="logo">
       <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
@@ -17,29 +50,24 @@
     <div class="menu">
       <h2>Panel de Administración</h2>
     </div>
-    <div class="usuario-menu">
-      <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
-      <ul class="menu-desplegable">
-        <li><strong>Administrador</strong></li>
-        <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
-      </ul>
-    </div>
+      <div class="usuario-menu">
+        <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
+        <ul class="menu-desplegable">
+          <li><strong>Maximo Ayala</strong></li>
+          <li><a href="/">Perfil</a></li>
+          <li><a href="#">Calificaciones</a></li>
+          <li><a href="#">Mensajes</a></li>
+          <li><a href="#">Preferencias</a></li>
+          <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
+        </ul>
+      </div>
   </header>
 
-  <!-- Cuerpo -->
   <main class="cuerpo">
     <section class="caja-notas">
-
-      <!-- Tabs -->
-      <div class="button-group">
-        <button onclick="mostrarSeccion('usuarios')">Usuarios</button>
-        <button onclick="mostrarSeccion('notas')">Notas</button>
-        <button onclick="mostrarSeccion('privilegios')">Privilegios</button>
-      </div>
-
-      <!-- Sección usuarios -->
       <div id="usuarios" class="seccion">
         <h3>Gestión de Usuarios</h3>
+        <button onclick="abrirModal('usuarios')">+ Nuevo Usuario</button>
         <table class="tabla-notas" id="tablaUsuarios">
           <thead>
             <tr>
@@ -49,37 +77,17 @@
           <tbody></tbody>
         </table>
       </div>
-
-      <!-- Sección notas -->
-      <div id="notas" class="seccion" style="display:none;">
-        <h3>Gestión de Notas</h3>
-        <table class="tabla-notas" id="tablaNotas">
-          <thead>
-            <tr>
-              <th>ID</th><th>Alumno</th><th>Materia</th><th>Nota</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-      <!-- Sección privilegios -->
-      <div id="privilegios" class="seccion" style="display:none;">
-        <h3>Gestión de Privilegios</h3>
-        <table class="tabla-notas" id="tablaPrivilegios">
-          <thead>
-            <tr>
-              <th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
     </section>
   </main>
 
-  <!-- Pie -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modal-title"></h3>
+      <form id="modal-form"></form>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+
   <footer>
     <p>&copy; 2024 Dr. Ernesto Guevarra</p>
   </footer>

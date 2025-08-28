@@ -2,6 +2,7 @@ import { JWT_SECRET,
     JWT_EXPIRES_IN,
     dbConfig,
     getCookieConfig,
+    getRedirectUrlByRole,
 }from "../config/config.js";
 import dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
@@ -9,17 +10,7 @@ import jwt from 'jsonwebtoken';
 import mysql from 'mysql2/promise';
 
 dotenv.config()
-
-function getRedirectUrlByRole(privilegioId) {
-    switch (privilegioId) {
-        case 1: return '/admin';
-        case 2: return '/profes';
-        case 3: return '/tutores';
-        case 4: return '/alumnos';
-        default: return '/index.html';
-    }
-}
-
+//RE LOGIN
 export async function checkSession(req, res) {
     try {
         const redirectUrl = getRedirectUrlByRole(req.privilegioId);

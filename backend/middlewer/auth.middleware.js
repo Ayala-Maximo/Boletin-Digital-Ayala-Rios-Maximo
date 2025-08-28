@@ -1,16 +1,5 @@
-import { JWT_SECRET, getCookieConfig } from "../config/config.js";
+import { JWT_SECRET, getCookieConfig,getRedirectUrlByRole } from "../config/config.js";
 import jwt from 'jsonwebtoken';
-
-// Función auxiliar para obtener la URL según rol
-function getRedirectUrlByRole(privilegioId) {
-    switch (privilegioId) {
-        case 1: return '/admin';
-        case 2: return '/profes';
-        case 3: return '/tutores';
-        case 4: return '/alumnos';
-        default: return '/index.html';
-    }
-}
 
 // Middleware base de autenticación
 export async function verificarToken(req, res, next) {

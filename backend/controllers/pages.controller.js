@@ -12,11 +12,6 @@ export const getRegistro = (req, res) => {
   res.sendFile(frontendPath+'/auth/registro.html');
 };
 
-export const getIndex = (req, res) => {
-  res.setHeader('Cache-Control', 'no-store');
-  res.sendFile(frontendPath+'/auth/index.html');
-};
-
 export const getAdmins = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.sendFile(frontendPath+'/protec/admin/indexAdmin.html');

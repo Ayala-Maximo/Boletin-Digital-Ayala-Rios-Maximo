@@ -3,7 +3,6 @@ import {
     getAdmins,
     getAlumnos,
     getHome,
-    getIndex,
     getLogin,
     getProfes,
     getRegistro,
@@ -18,7 +17,6 @@ const router = express.Router();
 router.get('/', getHome);
 router.get('/registro.html', getRegistro);
 router.get('/login.html', getLogin);
-router.get('/index.html', getIndex);
 router.get('/admin', soloRol(1), getAdmins);
 router.get('/alumnos', soloRol(4), getAlumnos);
 router.get('/tutores', soloRol(3), getTutores);

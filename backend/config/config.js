@@ -21,3 +21,13 @@ export const getCookieConfig = (req) => ({
 if (!JWT_SECRET || !dbConfig.host || !dbConfig.user || !dbConfig.database) {
   throw new Error('Faltan variables de entorno críticas');
 }
+
+export function getRedirectUrlByRole(privilegioId) {
+    switch (privilegioId) {
+        case 1: return '/admin';
+        case 2: return '/profes';
+        case 3: return '/tutores';
+        case 4: return '/alumnos';
+        default: return '/index.html';
+    }
+}

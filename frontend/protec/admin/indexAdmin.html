@@ -33,7 +33,7 @@
         <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
         <ul class="menu-desplegable">
           <li><strong>Maximo Ayala</strong></li>
-          <li><a href="#">Perfil</a></li>
+          <li><a href="/">Perfil</a></li>
           <li><a href="#">Calificaciones</a></li>
           <li><a href="#">Mensajes</a></li>
           <li><a href="#">Preferencias</a></li>
@@ -82,5 +82,15 @@
   </footer>
 </div>
 <script src="index.js"></script>
+<script >
+  document.getElementById("logo1").addEventListener("click", async function(e) {
+    e.preventDefault();
+    try {
+      setTimeout(() => window.location.href = "/dashboard", 0);
+    } catch (error) {
+      console.log("error")
+    }
+  })
+</script>
 </body>
 </html>
