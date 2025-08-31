@@ -29,10 +29,10 @@ export const getTutores = (req, res) => {
 
 export const getProfes = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
-  res.sendFile(frontendPath+'/protec/tutores/tutores.html');
+  res.sendFile(frontendPath+'/protec/profes/profes.html');
 };
 
-export const getdash = (req, res) => {
+export const getDash = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.sendFile(frontendPath+'/protec/admin/dashboard.html');
 };

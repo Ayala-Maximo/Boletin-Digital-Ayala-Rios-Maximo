@@ -1,156 +1,178 @@
-import { JWT_SECRET,
-    JWT_EXPIRES_IN,
-    dbConfig,
-    getCookieConfig,
-    getRedirectUrlByRole,
-}from "../config/config.js";
+import { 
+  JWT_SECRET,
+  JWT_EXPIRES_IN,
+  dbConfig,
+  getCookieConfig,
+  getRedirectUrlByRole,
+} from "../config/config.js";
 import dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import mysql from 'mysql2/promise';
+import rateLimit from 'express-rate-limit';
+import validator from 'validator';
 
-dotenv.config()
-//RE LOGIN
-export async function checkSession(req, res) {
-    try {
-        const redirectUrl = getRedirectUrlByRole(req.privilegioId);
-        res.json({
-            loggedIn: true,
-            privilegioId: req.privilegioId,
-            redirectUrl
-        });
-    } catch (error) {
-        res.status(401).json({ loggedIn: false });
-    }
+dotenv.config();
+
+// Crear pool en vez de connection simple
+const pool = mysql.createPool(dbConfig);
+export { pool };
+// Middleware de rate limiting (protege login contra fuerza bruta)
+export const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5, // máximo de intentos por IP
+  message: { error: "Demasiados intentos fallidos, intente más tarde" }
+});
+
+// ---- Validación de inputs ----
+function validarInput(data, type = "text") {
+  if (typeof data !== "string") return false;
+  const trimmed = data.trim();
+
+  switch (type) {
+    case "email":
+      return validator.isEmail(trimmed);
+    case "password":
+      return validator.isLength(trimmed, { min: 6, max: 64 });
+    case "name":
+      return validator.isAlpha(trimmed, 'es-ES', { ignore: " " }) && trimmed.length >= 2;
+    default:
+      return trimmed.length > 0;
+  }
 }
 
-// Lógica de registro
+// ---- CHECK SESSION ----
+export async function checkSession(req, res) {
+  try {
+    const redirectUrl = getRedirectUrlByRole(req.privilegioId);
 
+    res.json({
+      loggedIn: true,
+      user: {
+        id: req.userId,
+        privilegioId: req.privilegioId,
+        nombre: req.nombre,
+        apellido: req.apellido,
+        email: req.email
+      },
+      redirectUrl
+    });
+  } catch (error) {
+    console.error("Error en checkSession:", error);
+    res.status(401).json({ loggedIn: false });
+  }
+}
 
-export async function registro(req, res)  {
-    let conn;
-    try {
+// ---- REGISTRO ----
+export async function registro(req, res) {
+  let conn;
+  try {
     const { email, password, nombre, apellido } = req.body;
 
-    // Validación básica
-    if (!email || !password || !nombre || !apellido) {
-        return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    // Validaciones
+    if (!validarInput(email, "email") ||
+        !validarInput(password, "password") ||
+        !validarInput(nombre, "name") ||
+        !validarInput(apellido, "name")) {
+      return res.status(400).json({ error: "Datos inválidos" });
     }
 
-    // Hash con bcryptjs 
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
-    
-    // Conexión y query
-    conn = await mysql.createConnection(dbConfig);
+
+    conn = await pool.getConnection();
     const [result] = await conn.execute(
-        'INSERT INTO usuarios (email, password, nombre, apellido) VALUES (?, ?, ?, ?)',
-        [email, hashedPassword, nombre, apellido]
+      'INSERT INTO usuarios (email, password, nombre, apellido) VALUES (?, ?, ?, ?)',
+      [email.trim(), hashedPassword, nombre.trim(), apellido.trim()]
     );
-    
-    // Respuesta exitosa
-    res.status(201).json({ 
-        message: 'Usuario registrado con éxito',
-        userId: result.insertId
+
+    res.status(201).json({
+      message: "Usuario registrado con éxito",
+      userId: result.insertId
     });
-    
-    } catch (error) {
-    console.error('Error en registro:', error);
-    
-    if (error.code === 'ER_DUP_ENTRY') {
-        return res.status(409).json({ error: 'El email ya está registrado' });
+
+  } catch (error) {
+    console.error("Error en registro:", error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      return res.status(409).json({ error: "El email ya está registrado" });
     }
-    
-    res.status(500).json({ 
-        error: 'Error al registrar usuario',
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+
+    res.status(500).json({
+      error: "Error al registrar usuario",
+      details: process.env.NODE_ENV === "development" ? error.message : undefined
     });
-    } finally {if (conn) await conn.end();}
-};
+  } finally {
+    if (conn) conn.release();
+  }
+}
 
+// ---- LOGIN ----
+export async function login(req, res) {
+  let conn;
+  try {
+    const { email, password } = req.body;
 
-// Lógica de login
-
-
-export async function login(req, res)  {
-    let conn;
-    try {
-        const { email, password } = req.body;
-        
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email y contraseña son requeridos' });
-        }
-
-        conn = await mysql.createConnection(dbConfig);
-        // Obtener más datos del usuario para la respuesta
-        const [users] = await conn.execute(
-            'SELECT id, password, nombre, apellido, email, privilegio_id FROM usuarios WHERE email = ? LIMIT 1',
-            [email]
-        );
-
-        if (users.length === 0) {
-            return res.status(401).json({ error: 'Usuario no encontrado' });
-        }
-
-        const user = users[0];
-        const isMatch = await bcryptjs.compare(password, user.password);
-        
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Contraseña incorrecta' });
-        }
-
-        // Generar token JWT
-        const token = jwt.sign(
-            { userId: user.id,
-                privilegioId: user.privilegio_id 
-            },
-            JWT_SECRET, // Corregido: usando JWT_SECRET en lugar de secretKey
-            { expiresIn: JWT_EXPIRES_IN } 
-        );
-
-        res.cookie('jwt', token, getCookieConfig(req));
-
-        let redirectUrl;
-        switch (user.privilegio_id) {
-            case 1: redirectUrl = '/admin'; break;
-            case 2: redirectUrl = '/profes'; break;
-            case 3: redirectUrl = '/tutores'; break;
-            case 4: redirectUrl = '/alumnos'; break;
-            default: redirectUrl = '/index.html';
-        }
-
-        // Respuesta mejorada con más datos del usuario
-        res.json({ 
-            success: true,
-            message: 'Login exitoso',
-            redirectUrl,
-            user: {
-                id: user.id,
-                nombre: user.nombre,
-                apellido: user.apellido,
-                email: user.email,
-                rol: user.privilegio_id
-            }
-        });
-
-    } catch (error) {
-        console.error('Error en login:', error);
-        res.status(500).json({ 
-            error: 'Error en el servidor',
-            details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-    } finally {
-        if (conn) await conn.end();
+    if (!validarInput(email, "email") || !validarInput(password, "password")) {
+      return res.status(400).json({ error: "Email o contraseña inválidos" });
     }
-};
 
-export async function logout(req, res)  {
-  // Lógica de logout
-    try {
-        res.clearCookie('jwt',getCookieConfig(req));
-        res.json({ success: true, message: 'Sesión cerrada' });
-    } catch (error) {
-        console.error('Error en la borada de cokies:', error);
-    }finally {
+    conn = await pool.getConnection();
+    const [users] = await conn.execute(
+      'SELECT id, password, nombre, apellido, email, privilegio_id FROM usuarios WHERE email = ? LIMIT 1',
+      [email.trim()]
+    );
+
+    if (users.length === 0) {
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
     }
-};
+
+    const user = users[0];
+    const isMatch = await bcryptjs.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id, privilegioId: user.privilegio_id },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    res.cookie("jwt", token, getCookieConfig(req));
+
+    res.json({
+      success: true,
+      message: "Login exitoso",
+      redirectUrl: getRedirectUrlByRole(user.privilegio_id),
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        email: user.email,
+        rol: user.privilegio_id
+      }
+    });
+
+  } catch (error) {
+    console.error("Error en login:", error);
+    res.status(500).json({
+      error: "Error en el servidor",
+      details: process.env.NODE_ENV === "development" ? error.message : undefined
+    });
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
+// ---- LOGOUT ----
+export async function logout(req, res) {
+  try {
+    res.clearCookie("jwt", getCookieConfig(req));
+    res.json({ success: true, message: "Sesión cerrada" });
+  } catch (error) {
+    console.error("Error en logout:", error);
+    res.status(500).json({ error: "No se pudo cerrar la sesión" });
+  }
+}

@@ -1,5 +1,6 @@
 import { JWT_SECRET, getCookieConfig,getRedirectUrlByRole } from "../config/config.js";
 import jwt from 'jsonwebtoken';
+import {pool} from "../controllers/auth.controller.js";
 
 // Middleware base de autenticación
 export async function verificarToken(req, res, next) {
@@ -10,15 +11,42 @@ export async function verificarToken(req, res, next) {
             return res.redirect('/login.html');
         }
 
-        const decoded = jwt.verify(token, JWT_SECRET);
+        // Verificar token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || JWT_SECRET);
+        
+        // Asignar datos básicos del token
         req.userId = decoded.userId;
         req.privilegioId = decoded.privilegioId;
 
+        const [rows] = await pool.query(
+            "SELECT nombre, apellido, email FROM usuarios WHERE id = ? LIMIT 1",
+            [decoded.userId]
+        );
+
+        if (rows.length === 0) {
+            // Usuario no encontrado en BD pero token válido - inconsistencia
+            res.clearCookie('jwt', getCookieConfig(req));
+            return res.redirect('/login.html?error=user_not_found');
+        }
+
+        const user = rows[0];
+        req.nombre = user.nombre;
+        req.apellido = user.apellido;
+        req.email = user.email;
+
         next();
     } catch (error) {
-        console.log("Fallo al verificar token:", error.message);
+        console.error("Fallo al verificar token:", error.message);
         res.clearCookie('jwt', getCookieConfig(req));
-        res.redirect('/login.html?error=invalid_token');
+        
+        // Redirigir con mensaje de error apropiado
+        if (error.name === 'TokenExpiredError') {
+            res.redirect('/login.html?error=token_expired');
+        } else if (error.name === 'JsonWebTokenError') {
+            res.redirect('/login.html?error=invalid_token');
+        } else {
+            res.redirect('/login.html?error=auth_error');
+        }
     }
 }
 

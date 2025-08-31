@@ -1,11 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>profes</title>
+    <title>Boletin Digital Dr.Ernesto Guevarra</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <h1>profes</h1>
+
+
+<div class="caja-general">
+
+    <!-- Encabezado -->
+
+    <header>
+
+      <div class="logo" id="logo">
+      <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
+      </div>
+
+      <div class="menu">
+        <table>
+          <tr>
+            <th rowspan="2"><h3>Boletin Digital</h3></th>
+          </tr>
+        </table>
+      </div>
+
+
+      <!-- Menú de usuario -->
+      <div class="usuario-menu">
+        <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
+        <ul class="menu-desplegable">
+          <li><strong id="usuario-nombre">Usuario</strong></li>
+          <li><a href="/">Perfil</a></li>
+          <li><a href="#">Calificaciones</a></li>
+          <li><a href="#">Mensajes</a></li>
+          <li><a href="#">Preferencias</a></li>
+          <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
+        </ul>
+      </div>
+
+    </header>
+   
+   <!-- Cuerpo principal -->
+
+  <main class="cuerpo">
+    <section class="caja-notas">
+      <div class="image-container">
+        <!-- Segundo cuadro para imagen/logo -->
+        <div class="image-box">
+          <img src="imagenes/logo2.png" alt="logo 2" logo="logo2">
+        </div>
+        
+      </div>
+    </section>
+  </main>
+
+
+  <!-- Pie de paguna -->
+  <footer>
+    <div class="pie">
+     <div>
+      <h3>Contactos</h3>
+      <address>Río Candelaria 3460, V9420 Río Grande, Tierra del Fuego</address>
+      <address>Correo: cpdeguevara.sec@tdf.edu.ar</address>
+      <address>Teléfono: +54 0 2964 30 0532</address>
+     </div>
+     <div>
+      <h3>Redes Sociales</h3>
+      <A href="https://www.facebook.com/colegioguevara" target="_blank"> <img src="imagenes/facebook.png" alt="error" id="icono"> </A>
+      <A href="https://www.youtube.com/@colegioprovincialdrernesto1731" target="_blank"><img src="imagenes/yt.png" alt="error" id="icono"></A>
+      </div>
+    </div>
+    <p>&copy; 2024 Dr. Ernesto Guevarra</p>
+  </footer>
+</div>
+<script src="index.js"></script>
 </body>
 </html>
