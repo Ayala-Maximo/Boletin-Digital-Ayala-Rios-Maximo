@@ -1,3 +1,4 @@
+//auth.routes.js
 import { registro,login,logout,checkSession } from "../controllers/auth.controller.js";
 import { verificarToken } from "../middlewer/auth.middleware.js";
 import express from 'express';

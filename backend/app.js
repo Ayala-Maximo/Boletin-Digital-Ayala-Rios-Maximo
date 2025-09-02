@@ -1,3 +1,4 @@
+//app,js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -12,7 +13,7 @@ export const frontendPath = path.join(__dirname, '../frontend');
 import paginas from "./router/pages.routes.js";
 import posts from "./router/auth.routes.js";
 import adminRoutes  from "./router/admin.routes.js";
-
+import notasRoutes  from "./router/notas.routes.js";
 dotenv.config()
 const app = express();
 
@@ -25,5 +26,6 @@ app.set('trust proxy', 1);
 app.use("/",paginas)
 app.use('/api/auth', posts);
 app.use('/api', adminRoutes );
+app.use('/api/notas', notasRoutes);
 
 export default app;

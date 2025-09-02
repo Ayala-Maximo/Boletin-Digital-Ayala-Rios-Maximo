@@ -1,0 +1,91 @@
+.boletin-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.boletin-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #3498db;
+}
+
+.filtros {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filtro-item {
+    margin: 5px 10px;
+}
+
+.filtro-item select, .filtro-item button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.tabla-boletin {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabla-boletin th, .tabla-boletin td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.tabla-boletin th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.tabla-boletin tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.promedio-materia {
+    font-weight: bold;
+    background-color: #e8f4fc;
+}
+
+.promedio-general {
+    font-weight: bold;
+    font-size: 1.1em;
+    background-color: #d4edda;
+}
+
+.sin-notas {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.imprimir-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.imprimir-btn:hover {
+    background-color: #218838;
+}
+
+@media print {
+    .filtros, .imprimir-btn {
+        display: none;
+    }
+}

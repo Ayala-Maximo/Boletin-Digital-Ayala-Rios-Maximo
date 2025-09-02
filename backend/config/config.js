@@ -1,4 +1,6 @@
+//config.js
 import dotenv from 'dotenv';
+import mysql from 'mysql2/promise';
 dotenv.config()
 export  const JWT_SECRET = process.env.JWT_SECRET;
 export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
@@ -26,8 +28,11 @@ export function getRedirectUrlByRole(privilegioId) {
     switch (privilegioId) {
         case 1: return '/admin';
         case 2: return '/profes';
-        case 3: return '/tutores';
+        case 3: return '/secretaria';
         case 4: return '/alumnos';
-        default: return '/index.html';
+        default: return '/error';
     }
 }
+
+const pool = mysql.createPool(dbConfig);
+export { pool };

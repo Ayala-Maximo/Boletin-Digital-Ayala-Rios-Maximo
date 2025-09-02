@@ -1,3 +1,4 @@
+//index.js
 fetch('/api/auth/verificador', {
   method: 'POST',
   credentials: 'include', // Necesario para cookies

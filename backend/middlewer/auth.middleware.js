@@ -1,6 +1,7 @@
+//auth.middleware.js
 import { JWT_SECRET, getCookieConfig,getRedirectUrlByRole } from "../config/config.js";
 import jwt from 'jsonwebtoken';
-import {pool} from "../controllers/auth.controller.js";
+import { pool } from "../config/config.js";
 
 // Middleware base de autenticación
 export async function verificarToken(req, res, next) {
@@ -51,11 +52,11 @@ export async function verificarToken(req, res, next) {
 }
 
 // Middleware parametrizable según rol requerido
-export function soloRol(privilegioEsperado) {
+export function soloRol(...privilegiosEsperados) {
     return [
         verificarToken,
         (req, res, next) => {
-            if (req.privilegioId !== privilegioEsperado) {
+            if (!privilegiosEsperados.includes(req.privilegioId)) {
                 // Redirigir al usuario a su página según rol
                 const redirectUrl = getRedirectUrlByRole(req.privilegioId);
                 return res.redirect(redirectUrl);

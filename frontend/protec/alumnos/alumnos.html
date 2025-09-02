@@ -8,7 +8,6 @@
 </head>
 <body>
 
-
 <div class="caja-general">
 
     <!-- Encabezado -->
@@ -32,7 +31,7 @@
       <div class="usuario-menu">
         <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
         <ul class="menu-desplegable">
-          <li><strong>Maximo Ayala</strong></li>
+          <li><strong id="usuario-nombre">Usuario</strong></li>
           <li><a href="/">Perfil</a></li>
           <li><a href="#">Calificaciones</a></li>
           <li><a href="#">Mensajes</a></li>
@@ -48,9 +47,9 @@
   <main class="cuerpo">
     <section class="caja-notas">
       <div class="image-container">
-        <!-- Segundo cuadro para imagen/logo -->
+        <!-- Primer cuadro para imagen/logo -->
         <div class="image-box">
-          <img src="imagenes/logo2.png" alt="logo 2" logo="logo2">
+          <img src="imagenes/logo2.png" alt="logo 2" id="logo2">
         </div>
         
       </div>
@@ -77,5 +76,11 @@
   </footer>
 </div>
 <script src="index.js"></script>
+<script >
+  document.getElementById("logo2").addEventListener("click", function(e) {
+    requestAnimationFrame(() => {
+    window.location.href = "/boletin";
+  })});
+</script>
 </body>
 </html>

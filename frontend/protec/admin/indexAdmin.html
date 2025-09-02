@@ -1,3 +1,4 @@
+<!-- indexAdmin.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,12 +51,12 @@
       <div class="image-container">
         <!-- Primer cuadro para imagen/logo -->
         <div class="image-box">
-          <img src="imagenes/logo1.png" alt="logo 1" id="logo1">
+          <img src="imagenes/logo1.png" alt="logo1" id="logo1">
         </div>
         
         <!-- Segundo cuadro para imagen/logo -->
         <div class="image-box">
-          <img src="imagenes/logo2.png" alt="logo 2" logo="logo2">
+          <img src="imagenes/logo2.png" alt="logo2" id="logo2">
         </div>
         
       </div>
@@ -88,5 +89,11 @@
     window.location.href = "/dashboard";
   })});
 </script>
+<script>
+  document.getElementById("logo2").addEventListener("click", function(e) {
+    requestAnimationFrame(() => {
+    window.location.href = "/notas";
+  })});
+</script> 
 </body>
 </html>

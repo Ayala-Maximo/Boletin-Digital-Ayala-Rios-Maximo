@@ -1,22 +1,20 @@
+//auth.controller.js
 import { 
   JWT_SECRET,
   JWT_EXPIRES_IN,
-  dbConfig,
   getCookieConfig,
   getRedirectUrlByRole,
+  pool
 } from "../config/config.js";
+
 import dotenv from 'dotenv';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import mysql from 'mysql2/promise';
 import rateLimit from 'express-rate-limit';
 import validator from 'validator';
 
 dotenv.config();
 
-// Crear pool en vez de connection simple
-const pool = mysql.createPool(dbConfig);
-export { pool };
 // Middleware de rate limiting (protege login contra fuerza bruta)
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
@@ -135,7 +133,7 @@ export async function login(req, res) {
     }
 
     const token = jwt.sign(
-      { userId: user.id, privilegioId: user.privilegio_id },
+      { userId: user.id, privilegioId: user.privilegio_id,    nombre: user.nombre,apellido: user.apellido,email: user.email},
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );

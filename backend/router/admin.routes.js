@@ -1,8 +1,8 @@
-// Configuración de rutas
+// admin.routes.js
+
 import { getUsuarios,getNotas,getPrivilegios,deleteUsuario,updateUsuario,createUsuario,getUsuarioById } from "../controllers/admin.controller.js";
 import {soloRol} from "../middlewer/auth.middleware.js";
 import express from 'express';
-import bcrypt from "bcryptjs";
 const router = express.Router();
 
 // Rutas de Usuarios
