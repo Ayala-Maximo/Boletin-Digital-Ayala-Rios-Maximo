@@ -1,4 +1,4 @@
-/* admin.css*/
+/* estilos.css*/
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -133,96 +133,7 @@ footer {
     background-color: #f4f4f4;
     padding: 20px;
 }
-  
-/* Caja del formulario */
-.form-box {
-    background-color: white;
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
-}
-  
-/* Títulos del formulario */
-.form-box h2 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 20px;
-}
-  
-/* Etiquetas e inputs */
-.form-box label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-}
-  
-.form-box input {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-  
-/* Registro y login css */
-.form-box button {
-    width: 100%;
-    padding: 10px;
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-  
-.form-box button:hover {
-    background-color: #2980b9;
-}
-  
-/* Link de registro */
-.register-link {
-    text-align: center;
-    margin-top: 10px;
-}
-  
-.register-link a {
-    color: #3498db;
-    text-decoration: none;
-    font-weight: bold;
-}
-  
-.register-link a:hover {
-    text-decoration: underline;
-}
-  
-/* Grupo de botones */
-.button-group {
-    text-align: center;
-    margin-top: 10px;
-}
-  
-@media (max-width: 768px) {
-    .pie {
-        flex-direction: column;
-        text-align: center;
-    }
-  
-    .tabla-notas {
-        font-size: 14px;
-    }
-  
-    #icono {
-        width: 35px;
-        height: 35px;
-    }
-}
-  
+
 /* Menú desplegable de usuario */
 .usuario-menu {
     position: relative;
@@ -273,25 +184,4 @@ footer {
 
 .usuario-menu:hover .menu-desplegable {
     display: block;
-}
-
-.image-container {
-    display: flex;
-    justify-content: space-around;
-    margin: 20px 0;
-}
-.image-box {
-    width: 30%;
-    height: 200px;
-    border: 2px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background-color: #f9f9f9;
-}
-.image-box img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
 }
