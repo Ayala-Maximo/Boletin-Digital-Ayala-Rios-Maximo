@@ -43,7 +43,10 @@ export const getSecretaria = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.sendFile(frontendPath+'/protec/secretaria/secretaria.html');
 };
-
+export const getAdministracionUsuarios = (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(frontendPath+'/protec/secretaria/administracionUsuarios.html');
+};
 //profes
 export const getProfes = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');

@@ -87,6 +87,26 @@ export const createUsuario = async (req, res) => {
   }
 };
 
+export const updateupdateUsuario3 = async (req, res) => {
+  const { privilegio_id } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      "UPDATE usuarios SET privilegio_id=? WHERE id=?",
+      [privilegio_id, req.params.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.json({ success: true, message: "Rol actualizado correctamente" });
+  } catch (error) {
+    console.error("Error en updateUsuarioRol:", error);
+    res.status(500).json({ error: "Error al actualizar el rol del usuario" });
+  }
+};
+
 // Actualizar usuario
 export const updateUsuario = async (req, res) => {
   const { nombre, apellido, email, privilegio_id } = req.body;
@@ -103,6 +123,8 @@ export const updateUsuario = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar usuario" });
   }
 };
+
+
 
 // Eliminar usuario
 export const deleteUsuario = async (req, res) => {

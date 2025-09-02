@@ -1,11 +1,10 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración</title>
-  <link rel="stylesheet" href="css/dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 <div class="caja-general">
@@ -14,7 +13,7 @@
       <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
     </div>
     <div class="menu">
-      <h2>Panel de Administración</h2>
+      <h2>Administración de Usuarios</h2>
     </div>
       <div class="usuario-menu">
         <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
@@ -33,11 +32,10 @@
     <section class="caja-notas">
       <div id="usuarios" class="seccion">
         <h3>Gestión de Usuarios</h3>
-        <button onclick="abrirModal('usuarios')">+ Nuevo Usuario</button>
         <table class="tabla-notas" id="tablaUsuarios">
           <thead>
             <tr>
-              <th>ID</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Rol</th><th>Acciones</th>
+              <th>Nombre</th><th>Apellido</th><th>Email</th><th>Rol</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -58,7 +56,6 @@
     <p>&copy; 2024 Dr. Ernesto Guevarra</p>
   </footer>
 </div>
-
-<script src="dashboard.js"></script>
+<script src="secretaria.js"></script>
 </body>
 </html>
