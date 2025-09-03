@@ -175,16 +175,6 @@ async function eliminar(endpoint, id) {
   }
 }
 
-// Cerrar sesión
-document.getElementById("logout-btn").addEventListener("click", async () => {
-  try {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
-    window.location.href = "/login.html";
-  } catch (error) {
-    console.error("Error al cerrar sesión:", error);
-  }
-});
-
 // Inicializar aplicación
 document.addEventListener('DOMContentLoaded', () => {
   mostrarSeccion("usuarios");
