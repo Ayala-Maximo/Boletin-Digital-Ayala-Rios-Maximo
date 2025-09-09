@@ -1,3 +1,4 @@
+//login.js
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/api/auth/check-session', {

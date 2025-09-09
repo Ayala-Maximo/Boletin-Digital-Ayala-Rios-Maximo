@@ -1,3 +1,4 @@
+//regis.js
 const res_nombre = document.getElementById("nombre")    // formulario de registro
 const res_apellido = document.getElementById("apellido")    // formulario de registro
 const res_email = document.getElementById("email")  // formulario de registro

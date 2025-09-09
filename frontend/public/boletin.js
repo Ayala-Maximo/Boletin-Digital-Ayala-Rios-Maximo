@@ -1,3 +1,4 @@
+//boletin.js
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos DOM
     const usuarioNombre = document.getElementById('usuario-nombre');

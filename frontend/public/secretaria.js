@@ -1,3 +1,4 @@
+//secretari.js
 let entidadActual = null;
 let editandoId = null;
 

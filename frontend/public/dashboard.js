@@ -1,3 +1,4 @@
+//dashboard.js
 let entidadActual = null;
 let editandoId = null;
 
