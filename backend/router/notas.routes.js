@@ -9,7 +9,7 @@ import {
   getNotaById,
   getNotasAlumno 
 } from "../controllers/notas.controller.js";
-import { verificarToken } from "../middlewer/auth.middleware.js";
+import { verificarToken,soloRol } from "../middlewer/auth.middleware.js";
 
 const router = express.Router();
 
@@ -23,5 +23,6 @@ router.get("/:id", verificarToken, getNotaById);
 
 // Agregar esta ruta al archivo de rutas de notas
 router.get('/alumno/:id', verificarToken, getNotasAlumno);
+
 
 export default router;

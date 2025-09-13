@@ -1,18 +1,11 @@
 //boletin.js
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos DOM
     const usuarioNombre = document.getElementById('usuario-nombre');
     const infoAlumno = document.getElementById('info-alumno');
     const infoCurso = document.getElementById('info-curso');
     const contenedorBoletin = document.getElementById('contenedor-boletin');
-    const periodoFilter = document.getElementById('periodo-filter');
-    const materiaFilter = document.getElementById('materia-filter');
-    const aplicarFiltrosBtn = document.getElementById('aplicar-filtros');
-    const imprimirBtn = document.getElementById('imprimir-boletin');
     
     let notasData = [];
-    let periodos = [];
-    let materias = [];
     
     // Cargar datos del usuario y boletín
     async function cargarDatosUsuario() {
@@ -52,12 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 notasData = data;
                 
-                // Extraer periodos y materias únicos para los filtros
-                periodos = [...new Set(data.map(nota => nota.periodo))];
-                materias = [...new Set(data.map(nota => nota.materia))];
-                
-                // Llenar filtros
-                llenarFiltros();
+                // Obtener información del curso
+                await cargarInfoCurso(alumnoId);
                 
                 // Mostrar boletín
                 mostrarBoletin(data);
@@ -70,161 +59,165 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Llenar opciones de filtros
-    function llenarFiltros() {
-        // Limpiar filtros (excepto la opción por defecto)
-        while (periodoFilter.options.length > 1) {
-            periodoFilter.remove(1);
+    // Cargar información del curso del alumno
+    async function cargarInfoCurso(alumnoId) {
+        try {
+            const response = await fetch(`/api/alumnos/${alumnoId}/curso`, {
+                credentials: 'include'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.curso) {
+                    infoCurso.textContent = `Curso: ${data.curso.nombre}`;
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar información del curso:', error);
         }
-        
-        while (materiaFilter.options.length > 1) {
-            materiaFilter.remove(1);
-        }
-        
-        // Agregar periodos
-        periodos.forEach(periodo => {
-            const option = document.createElement('option');
-            option.value = periodo;
-            option.textContent = periodo;
-            periodoFilter.appendChild(option);
-        });
-        
-        // Agregar materias
-        materias.forEach(materia => {
-            const option = document.createElement('option');
-            option.value = materia;
-            option.textContent = materia;
-            materiaFilter.appendChild(option);
-        });
     }
     
-    // Aplicar filtros al boletín
-    function aplicarFiltros() {
-        let notasFiltradas = [...notasData];
-        
-        // Filtrar por periodo
-        if (periodoFilter.value !== 'todos') {
-            notasFiltradas = notasFiltradas.filter(nota => nota.periodo === periodoFilter.value);
-        }
-        
-        // Filtrar por materia
-        if (materiaFilter.value !== 'todos') {
-            notasFiltradas = notasFiltradas.filter(nota => nota.materia === materiaFilter.value);
-        }
-        
-        // Mostrar boletín filtrado
-        mostrarBoletin(notasFiltradas);
-    }
-    
-    // Mostrar boletín en una tabla
+    // Mostrar boletín organizado por períodos
     function mostrarBoletin(notas) {
         if (notas.length === 0) {
-            contenedorBoletin.innerHTML = '<p class="sin-notas">No hay notas para mostrar con los filtros seleccionados.</p>';
+            contenedorBoletin.innerHTML = '<p class="sin-notas">No hay notas para mostrar.</p>';
             return;
         }
         
-        // Agrupar notas por materia y periodo
-        const notasPorMateria = {};
+        // Agrupar notas por período (usamos el nombre del período como clave)
+        const notasPorPeriodo = {};
         notas.forEach(nota => {
-            if (!notasPorMateria[nota.materia]) {
-                notasPorMateria[nota.materia] = {};
+            if (!notasPorPeriodo[nota.periodo]) {
+                notasPorPeriodo[nota.periodo] = {
+                    nombre: nota.periodo,
+                    notas: []
+                };
             }
-            
-            if (!notasPorMateria[nota.materia][nota.periodo]) {
-                notasPorMateria[nota.materia][nota.periodo] = [];
-            }
-            
-            notasPorMateria[nota.materia][nota.periodo].push(nota);
+            notasPorPeriodo[nota.periodo].notas.push(nota);
         });
         
-        // Crear tabla
-        let html = `
+        let html = '';
+        const promediosPorMateria = {};
+        
+        // Generar HTML para cada período
+        for (const periodoNombre in notasPorPeriodo) {
+            const periodo = notasPorPeriodo[periodoNombre];
+            
+            html += `
+                <div class="periodo-section">
+                    <div class="periodo-title">
+                        <h3>${periodo.nombre}</h3>
+                    </div>
+            `;
+            
+            // Agrupar notas por materia en este período
+            const notasPorMateria = {};
+            periodo.notas.forEach(nota => {
+                if (!notasPorMateria[nota.materia]) {
+                    notasPorMateria[nota.materia] = {
+                        nombre: nota.materia,
+                        notas: [],
+                        promedio: 0
+                    };
+                }
+                notasPorMateria[nota.materia].notas.push(nota);
+            });
+            
+            // Calcular promedios por materia en este período
+            for (const materiaNombre in notasPorMateria) {
+                const materia = notasPorMateria[materiaNombre];
+                const suma = materia.notas.reduce((acc, nota) => acc + parseFloat(nota.valor), 0);
+                materia.promedio = suma / materia.notas.length;
+                
+                // Guardar para el promedio general
+                if (!promediosPorMateria[materiaNombre]) {
+                    promediosPorMateria[materiaNombre] = {
+                        nombre: materia.nombre,
+                        promedios: []
+                    };
+                }
+                promediosPorMateria[materiaNombre].promedios.push(materia.promedio);
+            }
+            
+            // Crear tabla para el período
+            html += `
+                <table class="tabla-boletin">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Notas</th>
+                            <th>Promedio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Llenar tabla con materias y notas
+            for (const materiaNombre in notasPorMateria) {
+                const materia = notasPorMateria[materiaNombre];
+                const notasList = materia.notas.map(nota => 
+                    `${nota.tipo_evaluacion || 'Evaluación'}: ${nota.valor}`
+                ).join(', ');
+                
+                html += `
+                    <tr>
+                        <td>${materia.nombre}</td>
+                        <td>${notasList}</td>
+                        <td class="promedio-materia">${materia.promedio.toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+            
+            html += `</tbody></table></div>`;
+        }
+        
+        // Calcular y mostrar promedios finales
+        html += `<div class="resumen-final">`;
+        html += `<h3>Resumen Final</h3>`;
+        html += `
             <table class="tabla-boletin">
                 <thead>
                     <tr>
                         <th>Materia</th>
+                        <th>Promedio Final</th>
+                    </tr>
+                </thead>
+                <tbody>
         `;
         
-        // Encabezados de periodos
-        periodos.forEach(periodo => {
-            html += `<th>${periodo}</th>`;
-        });
-        
-        html += `<th>Promedio</th></tr></thead><tbody>`;
-        
-        // Calcular promedios y llenar tabla
         let promedioGeneral = 0;
-        let materiasConNotas = 0;
+        let materiasConPromedio = 0;
         
-        for (const materia in notasPorMateria) {
-            html += `<tr><td>${materia}</td>`;
+        for (const materiaNombre in promediosPorMateria) {
+            const materia = promediosPorMateria[materiaNombre];
+            const promedioFinal = materia.promedios.reduce((acc, prom) => acc + prom, 0) / materia.promedios.length;
             
-            let promedioMateria = 0;
-            let evaluacionesMateria = 0;
+            html += `
+                <tr>
+                    <td>${materia.nombre}</td>
+                    <td class="nota-final">${promedioFinal.toFixed(2)}</td>
+                </tr>
+            `;
             
-            periodos.forEach(periodo => {
-                if (notasPorMateria[materia][periodo]) {
-                    const notasPeriodo = notasPorMateria[materia][periodo];
-                    const suma = notasPeriodo.reduce((acc, nota) => acc + parseFloat(nota.valor), 0);
-                    const promedio = suma / notasPeriodo.length;
-                    
-                    html += `<td>${promedio.toFixed(2)}</td>`;
-                    
-                    promedioMateria += promedio;
-                    evaluacionesMateria++;
-                } else {
-                    html += '<td>-</td>';
-                }
-            });
-            
-            if (evaluacionesMateria > 0) {
-                const promMateria = promedioMateria / evaluacionesMateria;
-                html += `<td class="promedio-materia">${promMateria.toFixed(2)}</td>`;
-                
-                promedioGeneral += promMateria;
-                materiasConNotas++;
-            } else {
-                html += '<td>-</td>';
-            }
-            
-            html += '</tr>';
+            promedioGeneral += promedioFinal;
+            materiasConPromedio++;
         }
         
         // Promedio general
-        if (materiasConNotas > 0) {
-            const promGeneral = promedioGeneral / materiasConNotas;
+        if (materiasConPromedio > 0) {
+            const promGeneral = promedioGeneral / materiasConPromedio;
             html += `
                 <tr>
-                    <td colspan="${periodos.length}" style="text-align: right; font-weight: bold;">Promedio General:</td>
-                    <td class="promedio-general">${promGeneral.toFixed(2)}</td>
+                    <td><strong>Promedio General</strong></td>
+                    <td class="promedio-periodo"><strong>${promGeneral.toFixed(2)}</strong></td>
                 </tr>
             `;
         }
         
-        html += '</tbody></table>';
+        html += `</tbody></table></div>`;
         
         contenedorBoletin.innerHTML = html;
     }
-    
-    // Event listeners
-    aplicarFiltrosBtn.addEventListener('click', aplicarFiltros);
-    
-    imprimirBtn.addEventListener('click', function() {
-        window.print();
-    });
-    
-    document.getElementById('logout-btn').addEventListener('click', async function(e) {
-        e.preventDefault();
-        try {
-            await fetch('/api/auth/logout', {
-                method: 'POST',
-                credentials: 'include'
-            });
-            window.location.href = '/login.html';
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
-    });
     
     // Inicializar
     cargarDatosUsuario();

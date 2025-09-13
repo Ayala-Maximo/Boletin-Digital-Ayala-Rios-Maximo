@@ -133,8 +133,8 @@ export const getNotaById = async (req, res) => {
 export const getNotasAlumno = async (req, res) => {
   try {
     // Verificar que el usuario esté autenticado y sea el alumno correspondiente o tenga permisos
-    if (req.privilegioId !== 4 && req.privilegioId !== 1) {
-      return res.status(403).json({ error: "No tiene permisos para ver estas notas" });
+    if (req.privilegioId === 4 && req.params.id && req.params.id != req.userId) {
+    return res.status(403).json({ error: "No puede ver notas de otros alumnos" });
     }
     
     // Si es alumno, solo puede ver sus propias notas

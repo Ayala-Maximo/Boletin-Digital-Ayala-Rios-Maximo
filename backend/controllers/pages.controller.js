@@ -53,6 +53,11 @@ export const getProfes = (req, res) => {
   res.sendFile(frontendPath+'/protec/profes/profes.html');
 };
 
+export const getPutAlum = (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  res.sendFile(frontendPath+'/protec/profes/editor.html');
+};
+
 //alumnos
 export const getAlumnos = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');

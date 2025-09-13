@@ -1,15 +1,17 @@
 /* estilos.css*/
 body {
+    background: url(back.jpg) center/cover no-repeat fixed;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #fafafa;
+    min-height: 100vh;
 }
   
 .caja-general {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: rgba(255, 255, 255, 0.055); /* Fondo semitransparente para mejor legibilidad */
 }
   
 header {
@@ -118,10 +120,15 @@ footer {
     padding-bottom: 10px;
 }
   
-#icono {
-    width: 50px;
-    height: 50px;
+.icono-red-social {
+    width: 60px;
+    height: 60px;
     margin: 5px;
+    transition: transform 0.3s ease;
+}
+
+.icono-red-social:hover {
+    transform: scale(1.1);
 }
 
 /* Contenedor principal centrado */
@@ -185,3 +192,4 @@ footer {
 .usuario-menu:hover .menu-desplegable {
     display: block;
 }
+

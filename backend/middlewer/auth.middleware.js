@@ -13,7 +13,7 @@ export async function verificarToken(req, res, next) {
         }
 
         // Verificar token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         
         // Asignar datos básicos del token
         req.userId = decoded.userId;
@@ -57,11 +57,29 @@ export function soloRol(...privilegiosEsperados) {
         verificarToken,
         (req, res, next) => {
             if (!privilegiosEsperados.includes(req.privilegioId)) {
-                // Redirigir al usuario a su página según rol
+                // Verificar si hay una redirección específica configurada para esta ruta y rol
+                const routeSpecificRedirect = getRouteSpecificRedirect(req.path, req.privilegioId);
+                
+                if (routeSpecificRedirect) {
+                    return res.redirect(routeSpecificRedirect);
+                }
+                
+                // Redirigir al usuario a su página según rol por defecto
                 const redirectUrl = getRedirectUrlByRole(req.privilegioId);
                 return res.redirect(redirectUrl);
             }
             next();
         }
     ];
+}
+
+function getRouteSpecificRedirect(path, privilegioId) {
+    const redirectRules = {
+        '/dashboard': {
+            3: '/AdministraciondeUsuarios' // Secretaría redirigida desde dashboard
+        }
+        // Puedes agregar más reglas aquí
+    };
+    
+    return redirectRules[path] && redirectRules[path][privilegioId];
 }

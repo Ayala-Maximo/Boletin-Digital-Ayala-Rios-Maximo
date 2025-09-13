@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Notas del Alumno</title>
+    <link rel="stylesheet" href="/css/notas.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+      <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
+    </div>
+    <div class="menu">
+      <h2>Notas de los Alumnos</h2>
+    </div>
+      <div class="usuario-menu">
+        <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
+        <ul class="menu-desplegable">
+          <li><strong id="usuario-nombre">Usuario</strong></li>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/notas">Calificaciones</a></li>
+          <li><a href= "/dashboard">Alumnos</a></li>
+          <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
+        </ul>
+      </div>
+  </header>
+      <main class="cuerpo">
+        <div class="contenedor">
+            <h2 id="infoAlumno">Alumno: ...</h2>
+            <table class="tabla-notas">
+                <thead>
+                    <tr><th>Materia</th><th>Periodo</th><th>Nota</th><th>Acciones</th></tr>
+                </thead>
+                <tbody id="tablaNotas">
+                    <tr><td colspan="4">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+</main>
+<footer><p>&copy; 2024 Dr. Ernesto Guevarra</p></footer>
+<script src="index.js"></script>
+<script src="editarAlumno.js"></script>
+</body>
+</html>

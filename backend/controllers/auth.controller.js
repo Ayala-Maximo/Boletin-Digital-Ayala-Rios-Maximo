@@ -33,7 +33,8 @@ function validarInput(data, type = "text") {
     case "password":
       return validator.isLength(trimmed, { min: 6, max: 64 });
     case "name":
-      return validator.isAlpha(trimmed, 'es-ES', { ignore: " " }) && trimmed.length >= 2;
+      return validator.isLength(trimmed, { min: 2 }) && 
+             /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(trimmed);
     default:
       return trimmed.length > 0;
   }
