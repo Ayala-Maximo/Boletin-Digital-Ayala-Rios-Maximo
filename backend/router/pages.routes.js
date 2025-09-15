@@ -32,7 +32,7 @@ router.get('/dashboard', soloRol(1), getDash);
 router.get('/notas', soloRol(1,2,3), getNotas);
 router.get('/boletin', soloRol(4), getBoletin);
 router.get('/AdministraciondeUsuarios', soloRol(3), getAdministracionUsuarios);
-router.get('/Editor', soloRol(2), getPutAlum);
+router.get('/editor', soloRol(2), getPutAlum);
 
 
 export default router;

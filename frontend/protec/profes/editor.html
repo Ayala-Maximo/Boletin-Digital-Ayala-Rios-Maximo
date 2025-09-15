@@ -2,16 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Notas del Alumno</title>
-    <link rel="stylesheet" href="/css/notas.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Notas por Alumno</title>
+    <link rel="stylesheet" href="css/no.css">
 </head>
 <body>
-<header>
+<div class="caja-general">
+
+  <header>
     <div class="logo">
       <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
     </div>
     <div class="menu">
-      <h2>Notas de los Alumnos</h2>
+      <h2>Notas por Alumno</h2>
     </div>
       <div class="usuario-menu">
         <img src="imagenes/hold.png" alt="Usuario" class="icono-usuario">
@@ -24,21 +27,166 @@
         </ul>
       </div>
   </header>
-      <main class="cuerpo">
-        <div class="contenedor">
-            <h2 id="infoAlumno">Alumno: ...</h2>
-            <table class="tabla-notas">
-                <thead>
-                    <tr><th>Materia</th><th>Periodo</th><th>Nota</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tablaNotas">
-                    <tr><td colspan="4">Cargando...</td></tr>
-                </tbody>
-            </table>
+
+    <main class="cuerpo">
+        <!-- Selector de alumno -->
+        <div class="selector-alumno">
+            <label for="selectorAlumno">Seleccionar Alumno:</label>
+            <select id="selectorAlumno">
+                <option value="">-- Seleccione un alumno --</option>
+                <option value="7">González, Juan</option>
+                <option value="9">Pérez, María</option>
+            </select>
         </div>
-</main>
-<footer><p>&copy; 2024 Dr. Ernesto Guevarra</p></footer>
-<script src="index.js"></script>
+
+        <!-- Información del alumno seleccionado -->
+        <div class="info-alumno" id="infoAlumno" style="display: none;">
+            <div class="info-item">
+                <h3>Alumno</h3>
+                <p id="alumnoNombre">-</p>
+            </div>
+            <div class="info-item">
+                <h3>Curso</h3>
+                <p id="alumnoCurso">-</p>
+            </div>
+            <div class="info-item">
+                <h3>Promedio General</h3>
+                <p id="alumnoPromedio">-</p>
+            </div>
+            <div class="info-item">
+                <h3>Estado</h3>
+                <p id="alumnoEstado">-</p>
+            </div>
+        </div>
+
+        <div id="seccion-notas" class="seccion">
+            <div class="filtros">
+                <div class="form-group">
+                    <label for="filtroMateria">Materia</label>
+                    <select id="filtroMateria">
+                        <option value="">Todas las materias</option>
+                        <option value="1">Matemática</option>
+                        <option value="2">Lengua</option>
+                        <option value="3">Taller</option>
+                        <option value="4">Filosofía</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filtroPeriodo">Período</label>
+                    <select id="filtroPeriodo">
+                        <option value="">Todos los períodos</option>
+                        <option value="1">Primer Cuatrimestre 2025</option>
+                        <option value="2">Segundo Cuatrimestre 2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filtroTipo">Tipo Evaluación</label>
+                    <select id="filtroTipo">
+                        <option value="">Todos los tipos</option>
+                        <option value="1">Primer Informe</option>
+                        <option value="2">Segundo Informe</option>
+                        <option value="3">Recuperatorio Diciembre</option>
+                        <option value="4">Recuperatorio Febrero</option>
+                        <option value="5">Nota Final</option>
+                    </select>
+                </div>
+                <div class="form-group" style="justify-content: flex-end;">
+                    <button class="btn" onclick="abrirModalNota()">+ Nueva Nota</button>
+                </div>
+            </div>
+
+            <!-- Tabla de notas -->
+            <div class="caja-notas">
+                <table class="tabla-notas" id="tablaNotas">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Nota</th>
+                            <th>Tipo</th>
+                            <th>Período</th>
+                            <th>Fecha</th>
+                            <th>Profesor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaNotas">
+                        <tr>
+                            <td colspan="7" style="text-align: center;">Seleccione un alumno para ver sus notas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para Notas -->
+    <div id="modalNota" class="modal">
+        <div class="modal-contenido">
+            <h3 id="modalNotaTitle">Nueva Nota</h3>
+            <form id="formNota">
+                <input type="hidden" id="notaId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="alumnoId">Alumno *</label>
+                        <select id="alumnoId" required>
+                            <option value="">Seleccionar alumno</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materiaId">Materia *</label>
+                        <select id="materiaId" required>
+                            <option value="">Seleccionar materia</option>
+                            <option value="1">Matemática</option>
+                            <option value="2">Lengua</option>
+                            <option value="3">Taller</option>
+                            <option value="4">Filosofía</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="periodoId">Período *</label>
+                        <select id="periodoId" required>
+                            <option value="">Seleccionar período</option>
+                            <option value="1">Primer Cuatrimestre 2025</option>
+                            <option value="2">Segundo Cuatrimestre 2025</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoEvaluacionId">Tipo Evaluación *</label>
+                        <select id="tipoEvaluacionId" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="1">Primer Informe</option>
+                            <option value="2">Segundo Informe</option>
+                            <option value="3">Recuperatorio Diciembre</option>
+                            <option value="4">Recuperatorio Febrero</option>
+                            <option value="5">Nota Final</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="notaValor">Nota *</label>
+                        <input type="number" id="notaValor" min="0" max="10" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaEvaluacion">Fecha Evaluación</label>
+                        <input type="date" id="fechaEvaluacion">
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalNota()">Cancelar</button>
+                <button type="button" class="btn" onclick="guardarNota()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Dr. Ernesto Guevarra</p>
+    </footer>
+</div>
+
 <script src="editarAlumno.js"></script>
 </body>
 </html>
