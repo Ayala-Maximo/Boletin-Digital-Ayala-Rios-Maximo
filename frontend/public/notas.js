@@ -11,21 +11,22 @@ class NotasManager {
         this.configurarEventos();
     }
 
-
-
     async cargarDatosFormulario() {
         try {
             const response = await fetch('/api/notas/form-data', {
                 credentials: 'include'
             });
             
-            if (!response.ok) throw new Error('Error al cargar datos');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al cargar datos');
+            }
             
             this.datosFormulario = await response.json();
             this.llenarSelectores();
         } catch (error) {
             console.error('Error:', error);
-            this.mostrarMensaje('Error al cargar datos del formulario', 'error');
+            this.mostrarMensaje(error.message || 'Error al cargar datos del formulario', 'error');
         }
     }
 
@@ -60,12 +61,16 @@ class NotasManager {
                 credentials: 'include'
             });
             
-            if (!response.ok) throw new Error('Error al cargar notas');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al cargar notas');
+            }
+            
             this.notas = await response.json();
             this.mostrarNotas();
         } catch (error) {
             console.error('Error:', error);
-            this.mostrarMensaje('Error al cargar las notas', 'error');
+            this.mostrarMensaje(error.message || 'Error al cargar las notas', 'error');
         }
     }
 
@@ -78,11 +83,18 @@ class NotasManager {
         this.notas.forEach(nota => {
             const fila = document.createElement('tr');
             
+            // Agregar data attributes para filtros más precisos
+            fila.setAttribute('data-alumno-id', nota.alumno_id);
+            fila.setAttribute('data-materia-id', nota.materia_id);
+            fila.setAttribute('data-periodo-id', nota.periodo_id);
+            fila.setAttribute('data-tipo-id', nota.tipo_evaluacion_id);
+            fila.setAttribute('data-profesor-id', nota.profesor_id);
+            
             fila.innerHTML = `
                 <td>${nota.alumno_apellido}, ${nota.alumno_nombre}</td>
                 <td>${nota.materia_nombre}</td>
                 <td>${nota.valor}</td>
-                <td>${nota.tipo_evaluacion}</td>
+                <td>${nota.tipo_evaluacion || 'Sin tipo'}</td>
                 <td>${nota.periodo_nombre}</td>
                 <td>${new Date(nota.fecha_evaluacion).toLocaleDateString()}</td>
                 <td>${nota.profesor_apellido}, ${nota.profesor_nombre}</td>
@@ -106,7 +118,6 @@ class NotasManager {
         document.getElementById('filtroMateria')?.addEventListener('change', () => this.aplicarFiltros());
         document.getElementById('filtroPeriodo')?.addEventListener('change', () => this.aplicarFiltros());
         document.getElementById('filtroTipo')?.addEventListener('change', () => this.aplicarFiltros());
-        
     }
 
     aplicarFiltros() {
@@ -118,15 +129,15 @@ class NotasManager {
         const filas = document.querySelectorAll('#cuerpoTablaNotas tr');
         
         filas.forEach(fila => {
-            const alumno = fila.cells[0].textContent;
-            const materia = fila.cells[1].textContent;
-            const periodo = fila.cells[4].textContent;
-            const tipo = fila.cells[3].textContent;
+            const alumnoId = fila.getAttribute('data-alumno-id');
+            const materiaId = fila.getAttribute('data-materia-id');
+            const periodoId = fila.getAttribute('data-periodo-id');
+            const tipoId = fila.getAttribute('data-tipo-id');
             
-            const coincideAlumno = !filtroAlumno || alumno.includes(this.obtenerTextoDesdeId(filtroAlumno, this.datosFormulario.alumnos));
-            const coincideMateria = !filtroMateria || materia === this.obtenerTextoDesdeId(filtroMateria, this.datosFormulario.materias);
-            const coincidePeriodo = !filtroPeriodo || periodo === this.obtenerTextoDesdeId(filtroPeriodo, this.datosFormulario.periodos);
-            const coincideTipo = !filtroTipo || tipo === this.obtenerTextoDesdeId(filtroTipo, this.datosFormulario.tiposEvaluacion);
+            const coincideAlumno = !filtroAlumno || alumnoId == filtroAlumno;
+            const coincideMateria = !filtroMateria || materiaId == filtroMateria;
+            const coincidePeriodo = !filtroPeriodo || periodoId == filtroPeriodo;
+            const coincideTipo = !filtroTipo || tipoId == filtroTipo;
             
             fila.style.display = (coincideAlumno && coincideMateria && coincidePeriodo && coincideTipo) ? '' : 'none';
         });
@@ -162,12 +173,19 @@ class NotasManager {
             return;
         }
         
+        // Validar que la nota esté entre 0 y 10
+        const notaValor = parseFloat(valor);
+        if (isNaN(notaValor) || notaValor < 0 || notaValor > 10) {
+            this.mostrarMensaje('La nota debe ser un número entre 0 y 10', 'error');
+            return;
+        }
+        
         const notaData = {
             alumno_id: alumnoId,
             materia_id: materiaId,
             periodo_id: periodoId,
             tipo_evaluacion_id: tipoId,
-            valor: parseFloat(valor),
+            valor: notaValor,
             fecha_evaluacion: fechaEvaluacion || new Date().toISOString().split('T')[0]
         };
         
@@ -184,7 +202,10 @@ class NotasManager {
                 credentials: 'include'
             });
             
-            if (!response.ok) throw new Error('Error al guardar nota');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al guardar nota');
+            }
             
             const result = await response.json();
             this.mostrarMensaje(result.message, 'success');
@@ -192,40 +213,48 @@ class NotasManager {
             await this.cargarNotas();
         } catch (error) {
             console.error('Error:', error);
-            this.mostrarMensaje('Error al guardar la nota', 'error');
+            this.mostrarMensaje(error.message || 'Error al guardar la nota', 'error');
         }
     }
 
     async editarNota(id) {
-      try {
-        // Obtener la nota completa desde el servidor
-        const response = await fetch(`/api/notas/${id}`, {
-          credentials: 'include'
-        });
+        try {
+            const response = await fetch(`/api/notas/${id}`, {
+                credentials: 'include'
+            });
 
-        if (!response.ok) throw new Error('Error al cargar nota');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al cargar nota');
+            }
 
-        const nota = await response.json();
+            const nota = await response.json();
 
-        // Llenar el formulario con los datos
-        document.getElementById('notaId').value = nota.id;
-        document.getElementById('alumnoId').value = nota.alumno_id;
-        document.getElementById('materiaId').value = nota.materia_id;
-        document.getElementById('periodoId').value = nota.periodo_id;
-        document.getElementById('tipoEvaluacionId').value = nota.tipo_evaluacion_id;
-        document.getElementById('notaValor').value = nota.valor;
-        document.getElementById('fechaEvaluacion').value = nota.fecha_evaluacion;
+            // Llenar el formulario con los datos
+            document.getElementById('notaId').value = nota.id;
+            document.getElementById('alumnoId').value = nota.alumno_id;
+            document.getElementById('materiaId').value = nota.materia_id;
+            document.getElementById('periodoId').value = nota.periodo_id;
+            document.getElementById('tipoEvaluacionId').value = nota.tipo_evaluacion_id;
+            document.getElementById('notaValor').value = nota.valor;
+            document.getElementById('fechaEvaluacion').value = nota.fecha_evaluacion;
 
-        document.getElementById('modalNotaTitle').textContent = 'Editar Nota';
-        this.abrirModalNota();
-      } catch (error) {
-        console.error('Error al preparar edición:', error);
-        this.mostrarMensaje('Error al cargar la nota para editar', 'error');
-      }
+            document.getElementById('modalNotaTitle').textContent = 'Editar Nota';
+            this.abrirModalNota();
+        } catch (error) {
+            console.error('Error al preparar edición:', error);
+            this.mostrarMensaje(error.message || 'Error al cargar la nota para editar', 'error');
+        }
     }
 
     async eliminarNota(id) {
-        if (!confirm('¿Estás seguro de que quieres eliminar esta nota?')) return;
+        // Encontrar la nota para mostrar información
+        const nota = this.notas.find(n => n.id === id);
+        const mensaje = nota 
+            ? `¿Estás seguro de que quieres eliminar la nota de ${nota.alumno_nombre} en ${nota.materia_nombre}?`
+            : '¿Estás seguro de que quieres eliminar esta nota?';
+        
+        if (!confirm(mensaje)) return;
         
         try {
             const response = await fetch(`/api/notas/${id}`, {
@@ -233,15 +262,17 @@ class NotasManager {
                 credentials: 'include'
             });
             
-            if (!response.ok) throw new Error('Error al eliminar nota');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al eliminar nota');
+            }
             
             const result = await response.json();
             this.mostrarMensaje(result.message, 'success');
             await this.cargarNotas();
         } catch (error) {
             console.error('Error:', error);
-            this.mostrarMensaje('Error al eliminar la nota', 'error');
-            console.log(req.userId, req.body);
+            this.mostrarMensaje(error.message || 'Error al eliminar la nota', 'error');
         }
     }
 

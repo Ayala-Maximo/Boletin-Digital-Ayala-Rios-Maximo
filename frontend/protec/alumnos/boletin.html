@@ -1,4 +1,5 @@
 <!-- boletin.html -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,49 +8,41 @@
     <title>Mi Boletín - Colegio Dr. Ernesto Guevara</title>
 
     <link rel="stylesheet" href="css/boletin.css">
-</head>
-<body>
-    <div class="caja-general">
-        <header>
-            <div class="logo" id="logo">
-                <img src="/imagenes/guebarra.png" alt="Logo del colegio" class="png">
-            </div>
-            <div class="menu">
-                <table>
-                    <tr>
-                        <th rowspan="2"><h3>Boletín Digital</h3></th>
-                    </tr>
-                </table>
-            </div>
-            <div class="usuario-menu">
-                <img src="/imagenes/hold.png" alt="Usuario" class="icono-usuario">
-                <ul class="menu-desplegable">
-                    <li><strong id="usuario-nombre">Usuario</strong></li>
-                    <li><a href="/" >Perfil</a></li>
-                    <li><a href="/boletin">Boletín de Notas</a></li>
-                    <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
-                </ul>
-            </div>
-        </header>
-        
-        <main class="cuerpo">
-            <div class="boletin-container">
-                <div class="boletin-header">
-                    <h1>Boletín de Calificaciones</h1>
-                    <p id="info-alumno">Alumno: Cargando...</p>
-                </div>
-                
-                <div id="contenedor-boletin">
-                    <p class="sin-notas">Cargando boletín...</p>
-                </div>
-            </div>
-        </main>
-        
-        <footer>
-            <p>&copy; 2024 Dr. Ernesto Guevara</p>
-        </footer>
 
-    </div>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
+        </div>
+        <div class="menu">
+            <h2>Notas de los Alumnos</h2>
+        </div>
+        <div class="usuario-menu">
+            <img src="/imagenes/hold.png" alt="Usuario" class="icono-usuario">
+            <ul class="menu-desplegable">
+                <li><strong id="usuario-nombre">Usuario</strong></li>
+                <li><a href="/" >Perfil</a></li>
+                <li><a href="/boletin">Boletín de Notas</a></li>
+                <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="cuerpo">
+        <div class="boletin-container">
+            <header class="boletin-header">
+            <h1 class="title">
+            Boletin de <span id="info-alumno">Cargando...</span></h1>
+            </header>
+        <div id="contenedor-boletin"> <p class="sin-notas">Cargando boletín...</p> </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Colegio Dr. Ernesto Guevara</p>
+    </footer>
 
     <script src="index.js"></script>
     <script src="boletin.js"></script>

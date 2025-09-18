@@ -1,4 +1,3 @@
-//notas.controller.js
 import { pool } from "../config/config.js";
 
 // Obtener todas las notas con información relacionada
@@ -9,7 +8,8 @@ export const getNotasCompletas = async (req, res) => {
       return res.status(401).json({ error: "Usuario no autenticado" });
     }
 
-    const [notas] = await pool.execute(`
+    // Admins y secretarios ven todas las notas, profesores ven todas las notas también
+    let query = `
       SELECT 
         n.id,
         u.id AS alumno_id,
@@ -21,15 +21,26 @@ export const getNotasCompletas = async (req, res) => {
         te.nombre AS tipo_evaluacion,
         p.apellido AS profesor_apellido,
         p.nombre AS profesor_nombre,
-        per.nombre AS periodo_nombre
+        per.nombre AS periodo_nombre,
+        n.profesor_id
       FROM notas n
       INNER JOIN usuarios u ON n.alumno_id = u.id
       INNER JOIN materias mat ON n.materia_id = mat.id
       INNER JOIN periodos_academicos per ON n.periodo_id = per.id
       INNER JOIN usuarios p ON n.profesor_id = p.id
       LEFT JOIN tipo_evaluaciones te ON n.tipo_evaluacion_id = te.id
-      WHERE n.profesor_id = ? OR ? = 1
-    `, [req.userId, req.privilegioId]);
+    `;
+    
+    // Solo para alumnos mantener el filtro original
+    if (req.privilegioId === 4) {
+      query += ` WHERE n.alumno_id = ?`;
+      var params = [req.userId];
+    } else {
+      // Admins, secretarios y profesores ven todas las notas
+      var params = [];
+    }
+
+    const [notas] = await pool.execute(query, params);
 
     res.json(notas);
   } catch (error) {
@@ -72,16 +83,16 @@ export const createNota = async (req, res) => {
   }
 };
 
-// Actualizar nota
+// Actualizar nota (ahora actualiza también el profesor_id)
 export const updateNota = async (req, res) => {
   try {
     const { valor, fecha_evaluacion } = req.body;
 
     const [result] = await pool.execute(
       `UPDATE notas 
-       SET valor = ?, fecha_evaluacion = ? 
+       SET valor = ?, fecha_evaluacion = ?, profesor_id = ?
        WHERE id = ?`,
-      [valor, fecha_evaluacion, req.params.id]
+      [valor, fecha_evaluacion, req.userId, req.params.id]
     );
 
     if (result.affectedRows === 0) {
@@ -98,6 +109,18 @@ export const updateNota = async (req, res) => {
 // Eliminar nota
 export const deleteNota = async (req, res) => {
   try {
+    // Verificar permisos antes de eliminar (solo admin o el profesor que creó la nota)
+    if (req.privilegioId !== 1) {
+      const [nota] = await pool.execute(
+        "SELECT profesor_id FROM notas WHERE id = ?",
+        [req.params.id]
+      );
+      
+      if (nota.length === 0 || nota[0].profesor_id !== req.userId) {
+        return res.status(403).json({ error: "No tiene permisos para eliminar esta nota" });
+      }
+    }
+
     const [result] = await pool.execute("DELETE FROM notas WHERE id = ?", [req.params.id]);
 
     if (result.affectedRows === 0) {
@@ -111,6 +134,7 @@ export const deleteNota = async (req, res) => {
   }
 };
 
+// Obtener nota específica por ID
 export const getNotaById = async (req, res) => {
   try {
     const [rows] = await pool.execute(
@@ -134,7 +158,7 @@ export const getNotasAlumno = async (req, res) => {
   try {
     // Verificar que el usuario esté autenticado y sea el alumno correspondiente o tenga permisos
     if (req.privilegioId === 4 && req.params.id && req.params.id != req.userId) {
-    return res.status(403).json({ error: "No puede ver notas de otros alumnos" });
+      return res.status(403).json({ error: "No puede ver notas de otros alumnos" });
     }
     
     // Si es alumno, solo puede ver sus propias notas
