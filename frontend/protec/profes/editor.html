@@ -3,42 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Notas</title>
+    <title>Boletines</title>
 
-    <link rel="stylesheet" href="css/boletin.css">
+    <link rel="stylesheet" href="css/editor.css">
 </head>
-<body>
+<body class="caja-general">
     <header>
         <div class="logo">
             <img src="imagenes/guebarra.png" alt="Logo del colegio" class="png">
         </div>
         <div class="menu">
-            <h2>Notas de los Alumnos</h2>
+            <h2>Boletines de los Alumnos</h2>
         </div>
         <div class="usuario-menu">
             <img src="/imagenes/hold.png" alt="Usuario" class="icono-usuario">
             <ul class="menu-desplegable">
                 <li><strong id="usuario-nombre">Usuario</strong></li>
                 <li><a href="/" >Perfil</a></li>
-                <li><a href="/boletin">Boletín de Notas</a></li>
+                <li><a href="/notas">Calificaciones</a></li>
+                <li><a href="/editor">Alumnos</a></li>
                 <li><a href="#" id="logout-btn">Cerrar sesión</a></li>
             </ul>
         </div>
     </header>
 
     <main class="cuerpo">
-        <div class="boletin-container">
-            <header class="boletin-header">
-            <h1 class="title">
-            Boletin de <span id="info-alumno">Cargando...</span></h1>
-            </header>
-        <div id="contenedor-boletin"> <p class="sin-notas">Cargando boletín...</p> </div>
+
+        <div id="seccion-notas" class="seccion activa">
+            
+            <div class="filtros-container">
+                <div class="filtros">
+                    <div class="form-group">
+                        <label for="filtroAlumno">Alumno</label>
+                        <select id="filtroAlumno">
+                            <option value="">Todos los alumnos</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-nueva-nota" onclick="abrirModalNota()">+ Nueva Nota</button>
+            </div>
+
+            <div class="caja-notas">
+                <table class="tabla-notas" id="tablaNotas">
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaNotas"></tbody>
+                </table>
+            </div>
         </div>
     </main>
 
+<div id="modalNota" class="modal">
+        <div class="modal-contenido">
+            <h3 id="modalNotaTitle">Nueva Nota</h3>
+            <form id="formNota">
+                <input type="hidden" id="notaId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="alumnoId">Alumno *</label>
+                        <select id="alumnoId" required>
+                            <option value="">Seleccionar alumno</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="materiaId">Materia *</label>
+                        <select id="materiaId" required>
+                            <option value="">Seleccionar materia</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="periodoId">Período *</label>
+                        <select id="periodoId" required>
+                            <option value="">Seleccionar período</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoEvaluacionId">Tipo Evaluación *</label>
+                        <select id="tipoEvaluacionId" required>
+                            <option value="">Seleccionar tipo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="notaValor">Nota *</label>
+                        <input type="number" id="notaValor" min="0" max="10" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaEvaluacion">Fecha Evaluación</label>
+                        <input type="date" id="fechaEvaluacion">
+                    </div>
+                </div>
+
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModalNota()">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnEliminarEnModal" style="display:none;">Eliminar</button>
+                <button type="button" class="btn" id="btnGuardarEnModal" onclick="guardarNota()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+    <script src="editor.js"></script>
     <footer >
         <p>&copy; 2024 Colegio Dr. Ernesto Guevara</p>
     </footer>
-    <script src="index.js"></script>
 </body>
 </html>

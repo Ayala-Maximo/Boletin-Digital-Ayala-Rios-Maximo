@@ -53,7 +53,7 @@ header {
 }
   
 .cuerpo {
-    flex: 1;
+    flex: 1; /* Esto es la abreviación de flex-grow: 1, flex-shrink: 1 y flex-basis: 0% */
     display: flex;
     justify-content: center;
     align-items: flex-start;

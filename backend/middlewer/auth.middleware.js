@@ -77,9 +77,12 @@ function getRouteSpecificRedirect(path, privilegioId) {
     const redirectRules = {
         '/dashboard': {
             3: '/AdministraciondeUsuarios' // Secretaría redirigida desde dashboard
+        },
+        '/dashboard': {
+            2: '/editor'
         }
         // Puedes agregar más reglas aquí
     };
     
     return redirectRules[path] && redirectRules[path][privilegioId];
-}
+};
